@@ -1,0 +1,46 @@
+#!/bin/sh
+params=" 
+--num_mixture 17 
+--rnn_size 200
+--num_layers 2
+--nrseq_per_batch 50
+
+--nrinputfiles_train 10000
+--nrinputfiles_test 5000
+--max_seq_length 100
+--num_epochs 100000
+--eval_every 1 
+--report_every 100 
+--save_every_nrbatches 500 
+--keep_prob 1 
+--learning_rate 0.0025
+--decay_rate .99995 
+--train_on_own_output_method 0 
+--sample_from_output 0 
+--regularization_factor 0.25 
+--l2_weight_regularization 0 
+--max_weight_regularization 1 
+--nrClassOutputVars 10
+--discard_classvar_inputs 1
+--randomizeSequenceOrder 1 
+--classweightfactor 0
+--curnrtrainexamples 5000
+--correctfrac_threshold_inc_nrtrainex 0.8 
+--useStrokeOutputVars 1
+--useClassInputVars 0
+--useStrokeLoss 1
+--usernn 1 
+--incremental_nr_trainexamples 0
+--incremental_seq_length 0
+--current_seq_length 2
+--threshold_rmse_stroke 4
+--incremental_nr_digits 0
+--curnrdigits 10
+--test_every_nrbatches 10
+--maxnrpoints 10000000
+--stat_windowsize_nrsequences 100
+"
+
+
+
+

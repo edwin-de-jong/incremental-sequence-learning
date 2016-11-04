@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+
+runnr=$3
+
+python --version
+which python
+
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied"
+  else
+    echo found param file: $1
+    rm -rf ./results/$1r$3 
+    rm -rf ./save/$1r$3 
+    mkdir ./results/$1r$3
+    source ./exp/$1
+    mkdir ./save/$1r$3
+
+    echo found params: $params
+
+    command="python train.py $params --explabel $*"
+    echo command: $command
+    $command
+    
+fi
+
+#python train.py --num_mixture 1 --rnn_size 1 --num_layers 1 --batch_size 1 --num_epochs 10000 --seq_length 10 --data_scale 5 --keep_prob 1 --learning_rate 0.005 $*
+
+#parameters can be adapted above, and more parameters from below can be added.
+#to predict: use ./runrnn --predict 1
+
+#params:
+#--rnn_size
+#--num_layers
+#--model
+#--batch_size
+#--seq_length
+#--num_epochs
+#--save_every
+#--grad_clip
+#--learning_rate
+#--decay_rate
+#--num_mixture
+#--data_scale
+#--keep_prob
