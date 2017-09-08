@@ -43,7 +43,6 @@ class Model( ):
       z_eod = z[ :, 1 ]
       z_eod = tf.sigmoid( z_eod ) #eod: sigmoid
 
-#      z_pi, z_mu1, z_mu2, z_sigma1, z_sigma2, z_corr = tf.split( 1, 6, z[ :, 2:last ] ) #eq 20: mu1, mu2: no transformation required
       z_pi, z_mu1, z_mu2, z_sigma1, z_sigma2, z_corr = tf.split( z[ :, 2:last ], 6, 1 ) #eq 20: mu1, mu2: no transformation required
 
       # process output z's into MDN parameters
@@ -204,7 +203,6 @@ class Model( ):
       self.seq_length = 2 #will be reduced by 1
     
     self.batch_size_ph = tf.placeholder( dtype = tf.int32 )
-#    self.batch_size_ph = tf.placeholder( tf.int32, [] )
     self.seq_length_ph = tf.placeholder( dtype = tf.int32 )
 
     if args.model == 'rnn':
@@ -256,7 +254,6 @@ class Model( ):
         layers = cell_fn( args.rnn_size )
         
       if args.num_layers > 0:
-#        layers = tf.nn.rnn_cell.MultiRNNCell( [ layers ] * args.num_layers, state_is_tuple = True )
 
         rnn_layers= []
         for li in range( args.num_layers ):
@@ -268,7 +265,6 @@ class Model( ):
             rnn_layers.append(layer)
         layers = tf.contrib.rnn.MultiRNNCell(cells=rnn_layers, state_is_tuple=True)
 
-#        outs, states = tf.contrib.rnn.static_rnn(rnn.cells, inputs, dytper=tf.float32)
       else:
           if args.model == 'lstm':
               layers = cell_fn(args.rnn_size, use_peepholes=True)
@@ -286,7 +282,6 @@ class Model( ):
     else:
       self.input_data = tf.placeholder( dtype = tf.float32, shape = [ None, self.seq_length - 1, nrinputvars_network ] )
       self.target_data = tf.placeholder( dtype = tf.float32, shape = [ None, self.seq_length - 1, nrtargetvars ] )
-#    self.batch_size_ph = tf.placeholder( dtype = tf.int32 )
     self.batch_size_ph = tf.placeholder( tf.int32, [] )
 
     if args.model == "ffnn":
@@ -296,7 +291,6 @@ class Model( ):
 
     seqlen = self.seq_length - 1
     self.inputdatasize = tf.shape( self.input_data )
-#    inputs = tf.split( 1, seqlen, self.input_data )
     inputs = tf.split( self.input_data, seqlen, 1)
     self.inputssize1 = tf.shape( inputs )
     inputs = [ tf.squeeze( input_, [ 1 ] ) for input_ in inputs ]
@@ -328,12 +322,10 @@ class Model( ):
         output = hidden2
       last_state = tf.zeros( [ 1 ] )
     elif args.usernn: #See https://www.tensorflow.org/versions/r0.10/tutorials/recurrent/index.html
-#      output, last_state = tf.nn.rnn( layers, inputs, initial_state = self.initial_state, scope = trainpredictmode )
       output, last_state = tf.contrib.rnn.static_rnn( layers, inputs, initial_state = self.initial_state, scope = trainpredictmode )
     else:
       output, last_state = tf.nn.seq2seq.rnn_decoder( inputs, self.initial_state, layers, loop_function = None, scope = trainpredictmode )
 
-#    output = tf.reshape( tf.concat( 1, output ), [ -1, args.rnn_size ] )
     output = tf.reshape( tf.concat( output, 1 ), [ -1, args.rnn_size ] )
     output = tf.nn.xw_plus_b( output, outputWeight, outputBias )
 
@@ -344,7 +336,6 @@ class Model( ):
     # reshape target data so that it is compatible with prediction shape
     flat_target_data = tf.reshape( self.target_data, [ -1, nrtargetvars ] ) # make 2d: ( nrseq * seq_length ) x nrinputvars_network    
     targetdata_classvars = flat_target_data[ :, :self.nrauxoutputvars ]
-#    [ x1_data, x2_data, eos_data, eod_data ] = tf.split( 1, 4, flat_target_data[ :, self.nrauxoutputvars: ] ) #classvars dx dy eos eod
     [ x1_data, x2_data, eos_data, eod_data ] = tf.split( flat_target_data[ :, self.nrauxoutputvars: ], 4, 1 ) #classvars dx dy eos eod
 
     loss = tf.zeros( 1, dtype = tf.float32, name = None )
