@@ -34,7 +34,8 @@ def main( ) :
   print_input = 0
   user = getpass.getuser( ) 
   print ( "user: ", user) 
-  logdir = "/home/"+user+"/code/digits/rnn/log/"
+  #logdir = "/home/"+user+"/code/digits/rnn/log/"
+  logdir = '~/projects/incremental-sequence-learning/log/'
 
   parser = argparse.ArgumentParser( ) 
   parser.add_argument( '--rnn_size', type = int, default = 256, 
@@ -161,7 +162,8 @@ def main( ) :
   else:
       args.curnrtrainexamples = args.nrinputfiles_train
 
-  datadir = "/home/"+user+"/code/digits/sequences/"
+#  datadir = "/home/"+user+"/code/digits/sequences/"
+  datadir = './data/sequences/'
   print( "using data dir: ", datadir ) 
 
   seqlenarg = 0
